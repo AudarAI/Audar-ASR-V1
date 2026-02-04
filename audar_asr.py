@@ -509,8 +509,14 @@ class AudarASR:
         print("  AudarASR - Production-Grade Speech Recognition")
         print("=" * 60)
         
-        # Determine torch dtype
-        torch_dtype = torch.float16 if self.compute_type == "float16" else torch.float32
+        # Determine torch dtype - use float32 for MPS to avoid issues
+        if self.device == "mps":
+            # MPS has issues with float16 for some operations
+            torch_dtype = torch.float32
+        elif self.compute_type == "float16" and self.device == "cuda":
+            torch_dtype = torch.float16
+        else:
+            torch_dtype = torch.float32
         
         print(f"\n[1/2] Loading model: {self.model_id}")
         t0 = time.time()
