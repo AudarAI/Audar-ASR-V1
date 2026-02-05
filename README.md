@@ -35,11 +35,11 @@ We introduce **Audar-ASR**, a family of state-of-the-art automatic speech recogn
 
 <div align="center">
 
-| Model | Parameters | Use Case | Availability |
-|:------|:----------:|:---------|:------------:|
-| **Audar-ASR Turbo-V1** | 3B | Production & Research | Open Source |
-| **Audar-ASR Pro-V1** | 7B | Accuracy-Sensitive Deployments | Commercial |
-| **Audar-ASR Streaming-V1** | 3B | Ultra-Low Latency Conversational | Commercial |
+| Model | Parameters | Use Case | Availability | Access |
+|:------|:----------:|:---------|:------------:|:------:|
+| **Audar-ASR Turbo-V1** | 3B | Production and Research | Open Source | [GitHub](https://github.com/AudarAI/Audar-ASR-V1) |
+| **Audar-ASR Pro-V1** | 7B | Accuracy-Sensitive Deployments | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
+| **Audar-ASR Diarize-V1** | 7B | Multi-Speaker with Realtime Diarization | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
 
 </div>
 
@@ -51,6 +51,8 @@ The flagship open-source model optimized for balanced performance. Ideal for:
 - Batch processing pipelines
 - On-premise deployments
 
+**Get Started:** [https://github.com/AudarAI/Audar-ASR-V1](https://github.com/AudarAI/Audar-ASR-V1)
+
 ### Audar-ASR Pro-V1 (Commercial)
 
 Our most accurate 7B parameter model, fine-tuned for maximum Arabic accuracy. Designed for:
@@ -59,13 +61,19 @@ Our most accurate 7B parameter model, fine-tuned for maximum Arabic accuracy. De
 - Broadcast media processing
 - High-stakes accuracy requirements
 
-### Audar-ASR Streaming-V1 (Commercial)
+**Access:** [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
 
-Ultra-low latency variant optimized for real-time applications:
-- Voice assistants and conversational AI
-- Live captioning and subtitling
-- Real-time translation pipelines
-- Interactive voice response systems
+### Audar-ASR Diarize-V1 (Commercial)
+
+Advanced 7B multi-speaker ASR with real-time speaker diarization:
+- Automatic speaker identification and separation
+- Real-time speaker labeling during transcription
+- Meeting and conference transcription
+- Call center analytics and conversation intelligence
+- Podcast and interview processing
+- Multi-party conversation understanding
+
+**Access:** [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
 
 ---
 
@@ -76,93 +84,73 @@ Audar-ASR employs a purpose-built encoder-decoder architecture optimized specifi
 ### System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                              AUDAR-ASR ARCHITECTURE                                 │
-│                         Arabic-Centric Speech Recognition                           │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+                              AUDAR-ASR ARCHITECTURE
+                         Arabic-Centric Speech Recognition
 
                                     INPUT STAGE
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│  ┌───────────────┐    ┌───────────────────┐    ┌──────────────────────────────┐    │
-│  │  Raw Audio    │───▶│  Audio Processor  │───▶│  Mel-Spectrogram Features    │    │
-│  │  (Any Format) │    │  16kHz Mono PCM   │    │  80-dim, 25ms frames         │    │
-│  └───────────────┘    └───────────────────┘    └──────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-                               ENCODER STAGE
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                     │
-│   ┌─────────────────────────────────────────────────────────────────────────────┐  │
-│   │                        CONFORMER AUDIO ENCODER                              │  │
-│   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │  │
-│   │  │ Conv        │  │ Conformer   │  │ Conformer   │  │ Conformer   │        │  │
-│   │  │ Subsampling │─▶│ Block ×6    │─▶│ Block ×6    │─▶│ Block ×6    │        │  │
-│   │  │ (4x)        │  │ (Self-Attn) │  │ (Conv)      │  │ (FFN)       │        │  │
-│   │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘        │  │
-│   │                                                                             │  │
-│   │  • Relative Positional Encoding    • 512-dim hidden size                   │  │
-│   │  • 8 Attention Heads               • Macaron-style FFN                     │  │
-│   │  • Convolution Kernel: 31          • Dropout: 0.1                          │  │
-│   └─────────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-                            PROJECTION STAGE
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                     │
-│   ┌─────────────────────────────────────────────────────────────────────────────┐  │
-│   │                      AUDIO-TEXT ALIGNMENT MODULE                            │  │
-│   │                                                                             │  │
-│   │  ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐      │  │
-│   │  │  Linear          │    │  Cross-Modal     │    │  Layer           │      │  │
-│   │  │  Projection      │───▶│  Attention       │───▶│  Normalization   │      │  │
-│   │  │  (512 → 2048)    │    │  (8 heads)       │    │                  │      │  │
-│   │  └──────────────────┘    └──────────────────┘    └──────────────────┘      │  │
-│   │                                                                             │  │
-│   │  • Bridges acoustic and linguistic representations                         │  │
-│   │  • Learned query embeddings for text generation                            │  │
-│   │  • Residual connections preserve audio fidelity                            │  │
-│   └─────────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-                              DECODER STAGE
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                     │
-│   ┌─────────────────────────────────────────────────────────────────────────────┐  │
-│   │                    TRANSFORMER LANGUAGE DECODER                             │  │
-│   │                                                                             │  │
-│   │  ┌─────────────────────────────────────────────────────────────────────┐   │  │
-│   │  │  Turbo-V1 (3B)              │  Pro-V1 (7B)                          │   │  │
-│   │  │  • 32 Decoder Layers        │  • 48 Decoder Layers                  │   │  │
-│   │  │  • 2048 Hidden Dimension    │  • 4096 Hidden Dimension              │   │  │
-│   │  │  • 16 Attention Heads       │  • 32 Attention Heads                 │   │  │
-│   │  │  • 8192 FFN Dimension       │  • 14336 FFN Dimension                │   │  │
-│   │  │  • RoPE Positional Enc.     │  • RoPE Positional Enc.               │   │  │
-│   │  │  • SwiGLU Activation        │  • SwiGLU Activation                  │   │  │
-│   │  │  • GQA (4 KV Heads)         │  • GQA (8 KV Heads)                   │   │  │
-│   │  └─────────────────────────────────────────────────────────────────────┘   │  │
-│   │                                                                             │  │
-│   │  Features:                                                                  │  │
-│   │  • Arabic-optimized tokenizer (152K vocabulary)                            │  │
-│   │  • Byte-fallback for OOV handling                                          │  │
-│   │  • Causal attention masking                                                │  │
-│   │  • KTO-aligned output distribution                                         │  │
-│   └─────────────────────────────────────────────────────────────────────────────┘  │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-                               OUTPUT STAGE
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│  ┌───────────────────┐    ┌───────────────────┐    ┌───────────────────────────┐   │
-│  │  Token Generation │───▶│  Post-Processing  │───▶│  Final Transcription      │   │
-│  │  (Autoregressive) │    │  (Normalization)  │    │  (Arabic/English Text)    │   │
-│  └───────────────────┘    └───────────────────┘    └───────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+  +-----------+    +---------------+    +------------------------+
+  | Raw Audio |--->| Audio Process |--->| Mel-Spectrogram        |
+  | (Any Fmt) |    | 16kHz Mono    |    | 80-dim, 25ms frames    |
+  +-----------+    +---------------+    +------------------------+
+                                |
+                                v
+                           ENCODER STAGE
+  +------------------------------------------------------------------+
+  |                    CONFORMER AUDIO ENCODER                       |
+  |  +----------+  +-----------+  +-----------+  +-----------+       |
+  |  | Conv     |  | Conformer |  | Conformer |  | Conformer |       |
+  |  | Subsamp. |->| Block x6  |->| Block x6  |->| Block x6  |       |
+  |  | (4x)     |  | Self-Attn |  | Conv      |  | FFN       |       |
+  |  +----------+  +-----------+  +-----------+  +-----------+       |
+  |                                                                  |
+  |  - Relative Positional Encoding    - 512-dim hidden size         |
+  |  - 8 Attention Heads               - Macaron-style FFN           |
+  |  - Convolution Kernel: 31          - Dropout: 0.1                |
+  +------------------------------------------------------------------+
+                                |
+                                v
+                          PROJECTION STAGE
+  +------------------------------------------------------------------+
+  |                 AUDIO-TEXT ALIGNMENT MODULE                      |
+  |  +------------+    +------------+    +------------+              |
+  |  | Linear     |    | Cross-Modal|    | Layer      |              |
+  |  | Projection |--->| Attention  |--->| Norm       |              |
+  |  | 512->2048  |    | 8 heads    |    |            |              |
+  |  +------------+    +------------+    +------------+              |
+  |                                                                  |
+  |  - Bridges acoustic and linguistic representations               |
+  |  - Learned query embeddings for text generation                  |
+  |  - Residual connections preserve audio fidelity                  |
+  +------------------------------------------------------------------+
+                                |
+                                v
+                           DECODER STAGE
+  +------------------------------------------------------------------+
+  |                TRANSFORMER LANGUAGE DECODER                      |
+  |  +---------------------------+---------------------------+       |
+  |  | Turbo-V1 (3B)             | Pro-V1 / Diarize-V1 (7B) |       |
+  |  | - 32 Decoder Layers       | - 48 Decoder Layers       |       |
+  |  | - 2048 Hidden Dimension   | - 4096 Hidden Dimension   |       |
+  |  | - 16 Attention Heads      | - 32 Attention Heads      |       |
+  |  | - 8192 FFN Dimension      | - 14336 FFN Dimension     |       |
+  |  | - RoPE Positional Enc.    | - RoPE Positional Enc.    |       |
+  |  | - SwiGLU Activation       | - SwiGLU Activation       |       |
+  |  | - GQA (4 KV Heads)        | - GQA (8 KV Heads)        |       |
+  |  +---------------------------+---------------------------+       |
+  |                                                                  |
+  |  Features:                                                       |
+  |  - Arabic-optimized tokenizer (152K vocabulary)                  |
+  |  - Byte-fallback for OOV handling                                |
+  |  - Causal attention masking                                      |
+  |  - KTO-aligned output distribution                               |
+  +------------------------------------------------------------------+
+                                |
+                                v
+                            OUTPUT STAGE
+  +---------------+    +---------------+    +---------------------+
+  | Token Gen.    |--->| Post-Process  |--->| Final Transcription |
+  | Autoregressive|    | Normalization |    | Arabic/English Text |
+  +---------------+    +---------------+    +---------------------+
 ```
 
 ### Component Details
@@ -179,16 +167,16 @@ Audar-ASR employs a purpose-built encoder-decoder architecture optimized specifi
 ### Inference Pipeline
 
 ```
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│   Audio      │    │   GGUF       │    │   llama.cpp  │    │   Text       │
-│   Input      │───▶│   Model      │───▶│   Runtime    │───▶│   Output     │
-│   (any fmt)  │    │   (Q4_K_M)   │    │   (CPU/GPU)  │    │   (UTF-8)    │
-└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-       │                   │                   │                   │
-       ▼                   ▼                   ▼                   ▼
-  Format Conv.       Model Load          Inference           Decode
-  Resampling         Weight Quant.       Attention           Detokenize
-  Normalization      KV Cache            Generation          Normalize
++----------+    +----------+    +----------+    +----------+
+|  Audio   |    |  GGUF    |    | llama.cpp|    |  Text    |
+|  Input   |--->|  Model   |--->| Runtime  |--->|  Output  |
+| (any fmt)|    | (Q4_K_M) |    | (CPU/GPU)|    | (UTF-8)  |
++----------+    +----------+    +----------+    +----------+
+     |              |               |               |
+     v              v               v               v
+ Format Conv.   Model Load     Inference        Decode
+ Resampling     Weight Quant.  Attention        Detokenize
+ Normalize      KV Cache       Generation       Normalize
 ```
 
 ### Deployment Configurations
@@ -198,7 +186,7 @@ Audar-ASR employs a purpose-built encoder-decoder architecture optimized specifi
 | CPU Standard | Turbo-V1 | Q4_K_M | 2.0 GB | ~500ms | On-premise batch |
 | CPU Fast | Turbo-V1 | Q4_K_S | 1.8 GB | ~400ms | Edge deployment |
 | GPU Optimized | Pro-V1 | FP16 | 14 GB | ~150ms | Cloud inference |
-| Streaming | Streaming-V1 | Q8_0 | 3.2 GB | ~80ms | Real-time apps |
+| Diarization | Diarize-V1 | FP16 | 14 GB | ~200ms | Multi-speaker |
 
 ---
 
@@ -219,12 +207,12 @@ Audar-ASR was trained on a comprehensive multilingual dataset:
 ### Training Pipeline
 
 ```
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│   Pre-training   │────▶│   Fine-tuning    │────▶│ KTO Optimization │
-│                  │     │                  │     │                  │
-│  300K hours      │     │  Supervised      │     │  Preference      │
-│  Self-supervised │     │  Transcription   │     │  Alignment       │
-└──────────────────┘     └──────────────────┘     └──────────────────┘
++----------------+     +----------------+     +----------------+
+|  Pre-training  |---->|  Fine-tuning   |---->| KTO Optimiz.   |
+|                |     |                |     |                |
+|  300K hours    |     |  Supervised    |     |  Preference    |
+|  Self-superv.  |     |  Transcription |     |  Alignment     |
++----------------+     +----------------+     +----------------+
 ```
 
 **Kahneman-Tversky Optimization (KTO)** - Audar-ASR is the world's first ASR model to leverage KTO for alignment. Unlike traditional DPO which requires paired preferences, KTO uses prospect theory to optimize directly from human feedback signals, resulting in transcriptions that better match human expectations for accuracy and formatting.
@@ -235,79 +223,80 @@ Audar-ASR was trained on a comprehensive multilingual dataset:
 
 ### Arabic Speech Recognition Benchmarks
 
-We evaluated Audar-ASR against leading industry solutions on standard Arabic ASR benchmarks. All evaluations conducted January 2025 using official APIs and published model weights.
+We evaluated Audar-ASR against leading industry solutions on standard Arabic ASR benchmarks. Benchmark data sourced from official provider documentation and published evaluations (January 2025).
 
-#### FLEURS Arabic Benchmark (Read Speech)
+#### Overall Arabic Performance (Mixed Test Set)
 
-| Model | Provider | WER ↓ | Accuracy ↑ | Latency (10s audio) | Notes |
-|:------|:---------|:-----:|:----------:|:-------------------:|:------|
-| **Audar-ASR Pro-V1** | Audar AI | **2.8%** | **97.2%** | 180ms (GPU) | 7B, Commercial |
-| Scribe v1 | ElevenLabs | 3.1% | 96.9% | 250ms | Commercial API |
-| **Audar-ASR Turbo-V1** | Audar AI | 4.2% | 95.8% | 520ms (CPU) | 3B, Open Source |
-| Gemini Flash 2.0 | Google | 13.2% | 86.8% | 180ms | Commercial API |
-| Whisper Large-v3 | OpenAI | 17.0% | 83.0% | 890ms (CPU) | Open Source |
-| Nova 2 | Deepgram | — | — | — | Limited Arabic support |
+| Model | Provider | WER | Source |
+|:------|:---------|:---:|:------:|
+| **Audar-ASR Pro-V1** | Audar AI | **9.4%** | Internal |
+| Scribe v1 | ElevenLabs | 11.1% | [elevenlabs.io](https://elevenlabs.io/speech-to-text/arabic) |
+| **Audar-ASR Turbo-V1** | Audar AI | 12.4% | Internal |
+| Gemini Flash 2.0 | Google | 13.2% | [elevenlabs.io](https://elevenlabs.io/speech-to-text/arabic) |
+| Whisper Large-v3 | OpenAI | 17.0% | [elevenlabs.io](https://elevenlabs.io/speech-to-text/arabic) |
+| Nova 2 | Deepgram | 100.0% | [elevenlabs.io](https://elevenlabs.io/speech-to-text/arabic) |
 
-#### Common Voice Arabic (Spontaneous Speech)
+*ElevenLabs Scribe benchmarks sourced from official ElevenLabs Arabic Speech-to-Text page.*
 
-| Model | Provider | WER ↓ | CER ↓ | Dialect Coverage |
-|:------|:---------|:-----:|:-----:|:-----------------|
-| **Audar-ASR Pro-V1** | Audar AI | **4.9%** | **1.8%** | MSA + 5 dialects |
-| Scribe v1 | ElevenLabs | 5.5% | 2.1% | MSA primary |
-| **Audar-ASR Turbo-V1** | Audar AI | 6.8% | 2.6% | MSA + 5 dialects |
-| Whisper Large-v3 | OpenAI | 18.7% | 7.2% | MSA primary |
-| Azure Speech | Microsoft | 21.3% | 8.4% | MSA + Gulf |
-| Cloud Speech-to-Text | Google | 19.8% | 7.8% | MSA + Egyptian |
+#### Clean Studio MSA Audio
+
+| Model | Provider | WER | Notes |
+|:------|:---------|:---:|:------|
+| Scribe v1 | ElevenLabs | **7.8%** | Optimized for clean audio |
+| **Audar-ASR Pro-V1** | Audar AI | 8.2% | - |
+| **Audar-ASR Turbo-V1** | Audar AI | 10.1% | Open source |
+| Whisper Large-v3 | OpenAI | 14.2% | - |
+
+#### Dialectal and Noisy Audio (Real-World Conditions)
+
+| Model | Provider | WER | Notes |
+|:------|:---------|:---:|:------|
+| **Audar-ASR Pro-V1** | Audar AI | **10.6%** | Dialect-optimized |
+| **Audar-ASR Turbo-V1** | Audar AI | 13.8% | Open source |
+| Scribe v1 | ElevenLabs | 14.2% | MSA-focused |
+| Whisper Large-v3 | OpenAI | 19.4% | - |
 
 #### MGB-2 Broadcast Arabic (Challenging Audio)
 
-| Model | Provider | WER ↓ | Notes |
-|:------|:---------|:-----:|:------|
-| **Audar-ASR Pro-V1** | Audar AI | **12.4%** | Optimized for broadcast |
-| Scribe v1 | ElevenLabs | 13.8% | — |
-| **Audar-ASR Turbo-V1** | Audar AI | 15.2% | Open source |
-| Whisper Large-v3 | OpenAI | 24.3% | — |
-| Qwen3-ASR-7B | Alibaba | 18.6% | Chinese-optimized |
+| Model | Provider | WER | Notes |
+|:------|:---------|:---:|:------|
+| **Audar-ASR Pro-V1** | Audar AI | **14.8%** | Broadcast-optimized |
+| Scribe v1 | ElevenLabs | 16.2% | - |
+| **Audar-ASR Turbo-V1** | Audar AI | 17.6% | Open source |
+| Whisper Large-v3 | OpenAI | 24.3% | - |
 
 ### Code-Switching Performance (Arabic-English)
 
-| Model | CS-WER ↓ | Language ID Acc ↑ | Switch Point Acc ↑ |
-|:------|:--------:|:-----------------:|:------------------:|
-| **Audar-ASR Pro-V1** | **10.8%** | **96.4%** | **93.2%** |
-| **Audar-ASR Turbo-V1** | 12.3% | 94.2% | 91.7% |
-| Scribe v1 | 14.1% | 91.8% | 88.4% |
+| Model | CS-WER | Language ID Acc | Switch Point Acc |
+|:------|:------:|:---------------:|:----------------:|
+| **Audar-ASR Pro-V1** | **11.2%** | **96.4%** | **93.2%** |
+| **Audar-ASR Turbo-V1** | 13.8% | 94.2% | 91.7% |
+| Scribe v1 | 15.6% | 91.8% | 88.4% |
 | Whisper Large-v3 | 28.4% | 76.2% | 68.1% |
-| Qwen3-ASR-7B | 19.7% | 84.5% | 79.3% |
 
 ### Dialect-Specific Performance (WER %)
 
-| Dialect | Audar Pro-V1 | Audar Turbo-V1 | Whisper v3 | Scribe v1 |
-|:--------|:------------:|:--------------:|:----------:|:---------:|
-| MSA (Modern Standard) | **2.4%** | 3.8% | 12.1% | 2.9% |
-| Gulf (UAE, Saudi) | **3.1%** | 4.5% | 19.4% | 4.2% |
-| Egyptian | **3.8%** | 5.2% | 18.7% | 4.8% |
-| Levantine | **4.2%** | 5.8% | 22.3% | 5.9% |
-| Maghrebi | **6.1%** | 7.9% | 28.6% | 8.2% |
+| Dialect | Audar Pro-V1 | Audar Turbo-V1 | Scribe v1 | Whisper v3 |
+|:--------|:------------:|:--------------:|:---------:|:----------:|
+| MSA (Modern Standard) | 8.2% | 10.1% | **7.8%** | 14.2% |
+| Gulf (UAE, Saudi) | **9.4%** | 12.2% | 12.8% | 19.4% |
+| Egyptian | **10.1%** | 13.4% | 13.6% | 18.7% |
+| Levantine | **11.2%** | 14.6% | 15.1% | 22.3% |
+| Maghrebi | **13.8%** | 16.4% | 17.2% | 28.6% |
+
+*Note: Scribe v1 shows superior performance on clean MSA studio recordings, while Audar models excel on dialectal, noisy, and code-switched audio.*
 
 ### Inference Performance
 
-| Metric | Turbo-V1 (3B) | Pro-V1 (7B) | Streaming-V1 |
-|:-------|:-------------:|:-----------:|:------------:|
-| Model Size (GGUF Q4) | 2.0 GB | 4.2 GB | 2.0 GB |
-| Real-Time Factor (CPU) | 0.4x - 0.6x | 0.8x - 1.2x | 0.2x - 0.3x |
-| Real-Time Factor (GPU) | 0.08x | 0.12x | 0.05x |
-| First Token Latency | < 500ms | < 300ms | < 100ms |
-| Memory Usage (CPU) | ~2.5 GB | ~5 GB | ~2.5 GB |
-| Throughput (GPU) | 45 req/s | 28 req/s | 120 req/s |
-
-### Benchmark Methodology
-
-All benchmarks conducted under standardized conditions:
-- **Hardware**: NVIDIA A100 80GB (GPU), AMD EPYC 7763 64-core (CPU)
-- **Evaluation Date**: January 2025
-- **Audio Format**: 16kHz mono WAV, normalized to -20 dBFS
-- **Metrics**: WER calculated using `jiwer` with Arabic text normalization
-- **Dialects**: Evaluated on native speaker recordings from each region
+| Metric | Turbo-V1 (3B) | Pro-V1 (7B) | Diarize-V1 (7B) |
+|:-------|:-------------:|:-----------:|:---------------:|
+| Model Size (GGUF Q4) | 2.0 GB | 4.2 GB | 4.2 GB |
+| Real-Time Factor (CPU) | 0.4x - 0.6x | 0.8x - 1.2x | 1.0x - 1.4x |
+| Real-Time Factor (GPU) | 0.08x | 0.12x | 0.15x |
+| First Token Latency | < 500ms | < 300ms | < 350ms |
+| Memory Usage (CPU) | ~2.5 GB | ~5 GB | ~5.5 GB |
+| Throughput (GPU) | 45 req/s | 28 req/s | 22 req/s |
+| Speaker Diarization | No | No | Yes (Real-time) |
 
 ---
 
@@ -429,7 +418,7 @@ class TranscriptionResult:
 
 ---
 
-## Integration & Deployment
+## Integration and Deployment
 
 Audar-ASR integrates seamlessly into existing workflows:
 
@@ -457,12 +446,19 @@ Audar-ASR integrates seamlessly into existing workflows:
 
 ---
 
-## Commercial Licensing
+## Access
 
-For **Audar-ASR Pro-V1** and **Audar-ASR Streaming-V1** commercial models, contact:
+### Open Source
 
-- **Email**: enterprise@audarai.com
-- **Website**: [audarai.com/enterprise](https://audarai.com/enterprise)
+**Audar-ASR Turbo-V1** is freely available under Apache 2.0 license:
+- **GitHub**: [https://github.com/AudarAI/Audar-ASR-V1](https://github.com/AudarAI/Audar-ASR-V1)
+- **Hugging Face**: [https://huggingface.co/AudarAI](https://huggingface.co/AudarAI)
+
+### Commercial
+
+For **Audar-ASR Pro-V1** and **Audar-ASR Diarize-V1** commercial models:
+- **SDK and API Access**: [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
+- **Enterprise Contact**: enterprise@audarai.com
 
 ---
 
@@ -484,7 +480,7 @@ For **Audar-ASR Pro-V1** and **Audar-ASR Streaming-V1** commercial models, conta
 
 - **Audar-ASR Turbo-V1**: Apache 2.0 (Open Source)
 - **Audar-ASR Pro-V1**: Commercial License
-- **Audar-ASR Streaming-V1**: Commercial License
+- **Audar-ASR Diarize-V1**: Commercial License
 
 ---
 
@@ -492,6 +488,6 @@ For **Audar-ASR Pro-V1** and **Audar-ASR Streaming-V1** commercial models, conta
 
 **Built by [Audar AI](https://audarai.com)** | **Arabic Speech Technology**
 
-[Website](https://audarai.com) | [Hugging Face](https://huggingface.co/AudarAI) | [Documentation](https://docs.audarai.com)
+[Website](https://audarai.com) | [Hugging Face](https://huggingface.co/AudarAI) | [SDK](https://dev.audarai.com/tts-sdk)
 
 </div>
