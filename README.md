@@ -8,7 +8,6 @@
 
 **Arabic-Centric ASR with Native Code-Switching Support**
 
-[![arXiv](https://img.shields.io/badge/arXiv-2501.XXXXX-b31b1b.svg)](https://arxiv.org/)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-Models-yellow.svg)](https://huggingface.co/AudarAI)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org)
@@ -38,8 +37,8 @@ We introduce **Audar-ASR**, a family of state-of-the-art automatic speech recogn
 | Model | Parameters | Use Case | Availability | Access |
 |:------|:----------:|:---------|:------------:|:------:|
 | **Audar-ASR Turbo-V1** | 3B | Production and Research | Open Source | [GitHub](https://github.com/AudarAI/Audar-ASR-V1) |
-| **Audar-ASR Pro-V1** | 7B | Accuracy-Sensitive Deployments | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
-| **Audar-ASR Diarization-V1** | 7B | Multi-Speaker with Realtime Diarization | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
+| **Audar-ASR Pro-V1** | 7B | Accuracy-Sensitive Deployments | Commercial | [SDK](https://dev.audarai.com) |
+| **Audar-ASR Diarization-V1** | 7B | Multi-Speaker with Realtime Diarization | Commercial | [SDK](https://dev.audarai.com) |
 
 </div>
 
@@ -61,7 +60,7 @@ Our most accurate 7B parameter model, fine-tuned for maximum Arabic accuracy. De
 - Broadcast media processing
 - High-stakes accuracy requirements
 
-**Access:** [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
+**Access:** [https://dev.audarai.com](https://dev.audarai.com)
 
 ### Audar-ASR Diarization-V1 (Commercial)
 
@@ -73,7 +72,7 @@ Advanced 7B multi-speaker ASR with real-time speaker diarization:
 - Podcast and interview processing
 - Multi-party conversation understanding
 
-**Access:** [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
+**Access:** [https://dev.audarai.com](https://dev.audarai.com)
 
 ---
 
@@ -488,7 +487,7 @@ Audar-ASR integrates seamlessly into existing workflows:
 ### Commercial
 
 For **Audar-ASR Pro-V1** and **Audar-ASR Diarization-V1** commercial models:
-- **SDK and API Access**: [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
+- **SDK and API Access**: [https://dev.audarai.com](https://dev.audarai.com)
 - **Enterprise Contact**: enterprise@audarai.com
 
 ---
@@ -519,6 +518,6 @@ For **Audar-ASR Pro-V1** and **Audar-ASR Diarization-V1** commercial models:
 
 **Built by [Audar AI](https://www.audarai.com)** | **Arabic Speech Technology**
 
-[Website](https://www.audarai.com) | [LinkedIn](https://www.linkedin.com/company/audarai) | [Hugging Face](https://huggingface.co/AudarAI) | [SDK](https://dev.audarai.com/tts-sdk)
+[Website](https://www.audarai.com) | [LinkedIn](https://www.linkedin.com/company/audarai) | [Hugging Face](https://huggingface.co/AudarAI) | [SDK](https://dev.audarai.com)
 
 </div>
