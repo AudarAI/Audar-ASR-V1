@@ -29,7 +29,7 @@ setup(
     packages=find_packages(exclude=["tests", "examples"]),
     python_requires=">=3.8",
     install_requires=[
-        # No hard dependencies - ffmpeg and llama.cpp are system requirements
+        "huggingface_hub>=0.20.0",  # Model download from HuggingFace
     ],
     extras_require={
         "microphone": ["pyaudio>=0.2.11"],
@@ -42,6 +42,7 @@ setup(
         ],
         "all": [
             "pyaudio>=0.2.11",
+            "huggingface_hub>=0.20.0",
         ],
     },
     entry_points={

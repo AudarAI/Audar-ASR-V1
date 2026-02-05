@@ -319,14 +319,45 @@ pip install -e .
 
 ### Download Models
 
-```bash
-# Download from Hugging Face
-huggingface-cli download AudarAI/audar-asr-turbo-v1-gguf --local-dir ./models
+Models are **automatically downloaded** from HuggingFace on first use:
 
-# Set environment variables
-export AUDAR_MODEL_PATH=./models/audar-asr-turbo-v1-q4km.gguf
-export AUDAR_MMPROJ_PATH=./models/mmproj-audar-asr-turbo-v1-f16.gguf
+```python
+from audar_asr import AudarASR
+
+# Models auto-download to ~/.cache/audar-asr/
+asr = AudarASR()
+result = asr.transcribe("audio.mp3")
 ```
+
+**Manual Download Options:**
+
+```bash
+# Option 1: Pre-download using Python
+python -c "from audar_asr import download_models; download_models()"
+
+# Option 2: Download using HuggingFace CLI
+huggingface-cli download audarai/audar-asr-turbo-v1-gguf --local-dir ./models
+
+# Option 3: Set environment variables for custom paths
+export AUDAR_MODEL_PATH=/path/to/audar-asr-q4km.gguf
+export AUDAR_MMPROJ_PATH=/path/to/mmproj-audar-asr-f16.gguf
+```
+
+**Offline Usage:**
+
+```python
+from audar_asr import AudarASR, AudarConfig
+
+# Disable auto-download for offline environments
+config = AudarConfig(
+    model_path="/path/to/audar-asr-q4km.gguf",
+    mmproj_path="/path/to/mmproj-audar-asr-f16.gguf",
+    auto_download=False
+)
+asr = AudarASR(config)
+```
+
+**HuggingFace Repository:** [audarai/audar-asr-turbo-v1-gguf](https://huggingface.co/audarai/audar-asr-turbo-v1-gguf)
 
 ### Basic Usage
 

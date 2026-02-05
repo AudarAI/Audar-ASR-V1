@@ -1,7 +1,8 @@
 # Audar-ASR Requirements
 # ======================
 
-# Core dependencies (none required - pure Python + system tools)
+# Core dependencies
+huggingface_hub>=0.20.0  # Model download from HuggingFace
 
 # Optional: Microphone input
 pyaudio>=0.2.11
