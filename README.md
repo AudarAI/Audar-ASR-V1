@@ -39,7 +39,7 @@ We introduce **Audar-ASR**, a family of state-of-the-art automatic speech recogn
 |:------|:----------:|:---------|:------------:|:------:|
 | **Audar-ASR Turbo-V1** | 3B | Production and Research | Open Source | [GitHub](https://github.com/AudarAI/Audar-ASR-V1) |
 | **Audar-ASR Pro-V1** | 7B | Accuracy-Sensitive Deployments | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
-| **Audar-ASR Diarize-V1** | 7B | Multi-Speaker with Realtime Diarization | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
+| **Audar-ASR Diarization-V1** | 7B | Multi-Speaker with Realtime Diarization | Commercial | [SDK](https://dev.audarai.com/tts-sdk) |
 
 </div>
 
@@ -63,7 +63,7 @@ Our most accurate 7B parameter model, fine-tuned for maximum Arabic accuracy. De
 
 **Access:** [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
 
-### Audar-ASR Diarize-V1 (Commercial)
+### Audar-ASR Diarization-V1 (Commercial)
 
 Advanced 7B multi-speaker ASR with real-time speaker diarization:
 - Automatic speaker identification and separation
@@ -128,7 +128,7 @@ Audar-ASR employs a purpose-built encoder-decoder architecture optimized specifi
   +------------------------------------------------------------------+
   |                TRANSFORMER LANGUAGE DECODER                      |
   |  +---------------------------+---------------------------+       |
-  |  | Turbo-V1 (3B)             | Pro-V1 / Diarize-V1 (7B) |       |
+  |  | Turbo-V1 (3B)             | Pro-V1 / Diarization-V1 (7B) |       |
   |  | - 32 Decoder Layers       | - 48 Decoder Layers       |       |
   |  | - 2048 Hidden Dimension   | - 4096 Hidden Dimension   |       |
   |  | - 16 Attention Heads      | - 32 Attention Heads      |       |
@@ -186,7 +186,7 @@ Audar-ASR employs a purpose-built encoder-decoder architecture optimized specifi
 | CPU Standard | Turbo-V1 | Q4_K_M | 2.0 GB | ~500ms | On-premise batch |
 | CPU Fast | Turbo-V1 | Q4_K_S | 1.8 GB | ~400ms | Edge deployment |
 | GPU Optimized | Pro-V1 | FP16 | 14 GB | ~150ms | Cloud inference |
-| Diarization | Diarize-V1 | FP16 | 14 GB | ~200ms | Multi-speaker |
+| Diarization | Diarization-V1 | FP16 | 14 GB | ~200ms | Multi-speaker |
 
 ---
 
@@ -288,7 +288,7 @@ We evaluated Audar-ASR against leading industry solutions on standard Arabic ASR
 
 ### Inference Performance
 
-| Metric | Turbo-V1 (3B) | Pro-V1 (7B) | Diarize-V1 (7B) |
+| Metric | Turbo-V1 (3B) | Pro-V1 (7B) | Diarization-V1 (7B) |
 |:-------|:-------------:|:-----------:|:---------------:|
 | Model Size (GGUF Q4) | 2.0 GB | 4.2 GB | 4.2 GB |
 | Real-Time Factor (CPU) | 0.4x - 0.6x | 0.8x - 1.2x | 1.0x - 1.4x |
@@ -456,7 +456,7 @@ Audar-ASR integrates seamlessly into existing workflows:
 
 ### Commercial
 
-For **Audar-ASR Pro-V1** and **Audar-ASR Diarize-V1** commercial models:
+For **Audar-ASR Pro-V1** and **Audar-ASR Diarization-V1** commercial models:
 - **SDK and API Access**: [https://dev.audarai.com/tts-sdk](https://dev.audarai.com/tts-sdk)
 - **Enterprise Contact**: enterprise@audarai.com
 
@@ -480,7 +480,7 @@ For **Audar-ASR Pro-V1** and **Audar-ASR Diarize-V1** commercial models:
 
 - **Audar-ASR Turbo-V1**: Apache 2.0 (Open Source)
 - **Audar-ASR Pro-V1**: Commercial License
-- **Audar-ASR Diarize-V1**: Commercial License
+- **Audar-ASR Diarization-V1**: Commercial License
 
 ---
 
