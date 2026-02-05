@@ -291,11 +291,11 @@ We evaluated Audar-ASR against leading industry solutions on standard Arabic ASR
 | Metric | Turbo-V1 (3B) | Pro-V1 (7B) | Diarization-V1 (7B) |
 |:-------|:-------------:|:-----------:|:---------------:|
 | Model Size (GGUF Q4) | 2.0 GB | 4.2 GB | 4.2 GB |
-| Real-Time Factor (CPU) | 0.4x - 0.6x | 0.8x - 1.2x | 1.0x - 1.4x |
-| Real-Time Factor (GPU) | 0.08x | 0.12x | 0.15x |
-| First Token Latency | < 500ms | < 300ms | < 350ms |
+| Real-Time Factor (CPU) | 0.3x - 0.5x | 0.6x - 0.9x | 0.8x - 1.1x |
+| Real-Time Factor (GPU) | 0.05x | 0.08x | 0.10x |
+| First Token Latency | < 180ms | < 320ms | < 380ms |
 | Memory Usage (CPU) | ~2.5 GB | ~5 GB | ~5.5 GB |
-| Throughput (GPU) | 45 req/s | 28 req/s | 22 req/s |
+| Throughput (GPU) | 52 req/s | 32 req/s | 26 req/s |
 | Speaker Diarization | No | No | Yes (Real-time) |
 
 ---
@@ -486,8 +486,8 @@ For **Audar-ASR Pro-V1** and **Audar-ASR Diarization-V1** commercial models:
 
 <div align="center">
 
-**Built by [Audar AI](https://audarai.com)** | **Arabic Speech Technology**
+**Built by [Audar AI](https://www.audarai.com)** | **Arabic Speech Technology**
 
-[Website](https://audarai.com) | [Hugging Face](https://huggingface.co/AudarAI) | [SDK](https://dev.audarai.com/tts-sdk)
+[Website](https://www.audarai.com) | [LinkedIn](https://www.linkedin.com/company/audarai) | [Hugging Face](https://huggingface.co/AudarAI) | [SDK](https://dev.audarai.com/tts-sdk)
 
 </div>
