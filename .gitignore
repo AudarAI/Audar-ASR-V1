@@ -1,10 +1,12 @@
-# .gitignore for AudarASR
-
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -22,59 +24,67 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Environments
+.env
+.venv
+env/
 venv/
 ENV/
-env/
-.venv/
+env.bak/
+venv.bak/
 
-# IDE
+# IDEs
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Cache
-.cache/
-*.cache
-
-# Output
-output/
-benchmark_reports/
-*.wav
-*.mp3
-*.m4a
-*.flac
-*.ogg
-*.mp4
-
-# Models
-*.gguf
-*.bin
-*.pt
-*.pth
-*.safetensors
-
-# Logs
-*.log
-logs/
-
 # OS
 .DS_Store
 Thumbs.db
 
-# Secrets
-.env
-*.key
-*.pem
+# Models (large files)
+models/*.gguf
+*.gguf
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Audio test files
+*.wav
+*.mp3
+*.m4a
+!examples/*.wav
+
+# Transcription outputs
+transcriptions_*.json

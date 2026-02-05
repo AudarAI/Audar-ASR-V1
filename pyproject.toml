@@ -1,0 +1,101 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audar-asr"
+version = "1.0.0"
+description = "Production-grade Arabic & English Speech Recognition"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Audar AI", email = "contact@audarai.com"}
+]
+keywords = [
+    "asr",
+    "speech-recognition", 
+    "arabic",
+    "whisper",
+    "qwen",
+    "gguf",
+    "cpu-inference",
+    "real-time",
+    "transcription"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+microphone = ["pyaudio>=0.2.11"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "isort>=5.12",
+    "mypy>=1.0",
+]
+all = ["pyaudio>=0.2.11"]
+
+[project.scripts]
+audar-asr = "audar_asr.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/AudarAI/Audar-ASR"
+Documentation = "https://github.com/AudarAI/Audar-ASR#readme"
+Repository = "https://github.com/AudarAI/Audar-ASR"
+Issues = "https://github.com/AudarAI/Audar-ASR/issues"
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "examples*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip_gitignore = true
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

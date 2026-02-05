@@ -1,38 +1,24 @@
-# Core dependencies
-torch>=2.0.0
-torchaudio>=2.0.0
-transformers>=4.45.0
-numpy>=1.21.0
-accelerate>=0.25.0
+# Audar-ASR Requirements
+# ======================
 
-# API client
-openai>=1.0.0
-httpx>=0.25.0
+# Core dependencies (none required - pure Python + system tools)
 
-# Evaluation metrics
-jiwer>=3.0.0
+# Optional: Microphone input
+pyaudio>=0.2.11
 
-# GPTQ quantization (for 3B model)
-# gptqmodel>=1.0.0  # Install via: pip install gptqmodel
-# auto-gptq>=0.7.0  # Alternative: pip install auto-gptq
+# Development dependencies
+pytest>=7.0
+pytest-cov>=4.0
+black>=23.0
+isort>=5.12
+mypy>=1.0
 
-# VAD (optional)
-# silero-vad  # Install via: pip install silero-vad
-
-# Benchmarking (optional)
-datasets>=2.14.0
-pandas>=2.0.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
-loguru>=0.7.0
-
-# MLX for Apple Silicon (optional)
-# mlx>=0.5.0  # Install via: pip install mlx
-# mlx-lm>=0.1.0  # Install via: pip install mlx-lm
-
-# Development (optional)
-# pytest>=7.0.0
-# pytest-asyncio>=0.21.0
-# black>=23.0.0
-# isort>=5.12.0
-# mypy>=1.0.0
+# System Requirements (not pip installable):
+# - ffmpeg: Audio format conversion
+#   macOS: brew install ffmpeg
+#   Ubuntu: sudo apt install ffmpeg
+#   Windows: choco install ffmpeg
+#
+# - llama.cpp with llama-mtmd-cli: GGUF inference backend
+#   macOS: brew install llama.cpp
+#   Or build from source: https://github.com/ggerganov/llama.cpp
