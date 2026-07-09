@@ -1,0 +1,20 @@
+Audar-ASR-V1 — developer resources
+Copyright 2026 AUDARAI PTE. LTD.
+
+This repository (example code, reference inference helpers, and documentation) is licensed
+under the Apache License, Version 2.0. See the LICENSE file.
+
+THE MODEL WEIGHTS ARE LICENSED SEPARATELY — the Apache-2.0 license in this repository does
+NOT cover the model weights:
+
+  * Audar-ASR-V1-Flash  — AudarAI Open License v1.0
+      https://www.audarai.com/license/audarai-open-license-v1.0/
+  * Audar-ASR-V1-Turbo  — AudarAI Community License v1.0
+      https://www.audarai.com/license/audarai-community-license-v1.0/
+
+Enterprise, large-scale, or model-as-a-service use may require an AudarAI Enterprise License.
+Contact: contact@audarai.com  ·  https://www.audarai.com
+
+The models are adapted in-house from a permissively-licensed open-weight audio-LLM foundation
+in the Qwen3-ASR architecture format (Apache-2.0). The contribution is the adaptation — the
+Arabic data curriculum and alignment rubric — not the foundation architecture.

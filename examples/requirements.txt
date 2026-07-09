@@ -1,0 +1,6 @@
+# Audar-ASR-V1 — Transformers reference inference (Flash tier)
+transformers>=4.57
+torch>=2.4
+librosa>=0.10
+numpy>=1.24
+# Turbo is GGUF-only — no Python deps; see gguf_infer.sh (build llama.cpp with Qwen3-ASR support).

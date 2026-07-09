@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Downloaded weights / audio (never commit model files)
+models/
+*.gguf
+*.safetensors
+*.wav
+*.mp3
+*.flac
+*.m4a
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
