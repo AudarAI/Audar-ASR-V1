@@ -156,8 +156,7 @@ See the **[Audar API](https://www.audarai.com)**.
 ## 📄 Citation
 
 Technical report — *Audar-ASR-V1: A Multilingual, Arabic-First Generative Speech Recognition Foundation
-Model*, Audar AI Team, 2026 — **[read the PDF](Audar-ASR-V1-Technical-Report.pdf)** (also attached to the
-[latest release](https://github.com/AudarAI/Audar-ASR-V1/releases/latest)).
+Model*, Audar AI Team, 2026 — **[read the PDF](Audar-ASR-V1-Technical-Report.pdf)**.
 
 ```bibtex
 @techreport{audar-asr-v1-2026,
