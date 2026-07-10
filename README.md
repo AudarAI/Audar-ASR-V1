@@ -8,7 +8,7 @@
 
 [![Open-AR-ASR](https://img.shields.io/badge/Open--AR--ASR-%231%20of%2036%20%C2%B7%2024.8%25%20avg%20WER-2ea44f)](benchmarks/README.md)
 [![Models](https://img.shields.io/badge/🤗%20Models-Flash%20%2B%20Turbo-ffcc4d)](https://huggingface.co/audarai)
-[![Paper](https://img.shields.io/badge/📄%20Technical%20Report-PDF-blue)](Audar-ASR-V1-Technical-Report.pdf)
+[![Paper](https://img.shields.io/badge/📄%20Technical%20Report-PDF-blue)](report/Audar-ASR-V1-Technical-Report.pdf)
 [![Code License](https://img.shields.io/badge/code-Apache%202.0-6f42c1)](LICENSE)
 [![Website](https://img.shields.io/badge/🌐%20audarai.com-informational)](https://www.audarai.com)
 
@@ -156,7 +156,7 @@ See the **[Audar API](https://www.audarai.com)**.
 ## 📄 Citation
 
 Technical report — *Audar-ASR-V1: A Multilingual, Arabic-First Generative Speech Recognition Foundation
-Model*, Audar AI Team, 2026 — **[read the PDF](Audar-ASR-V1-Technical-Report.pdf)**.
+Model*, Audar AI Team, 2026 — **[read the PDF](report/Audar-ASR-V1-Technical-Report.pdf)**.
 
 ```bibtex
 @techreport{audar-asr-v1-2026,
