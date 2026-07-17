@@ -27,9 +27,11 @@
 
 **Audar-ASR-V1** is a family of Arabic-first, generative speech-recognition models from
 [AudarAI](https://www.audarai.com). It recasts transcription as audio-conditioned next-token prediction
-over a unified text vocabulary — a language-model decoder rather than a CTC or transducer objective — and
-is adapted in-house through **300,000+ hours** of labeled Arabic audio and a four-stage curriculum that
-ends in **KTO preference alignment** from native Arabic annotators. It transcribes MSA and every major
+over a unified text vocabulary — a language-model decoder rather than a CTC or transducer objective. It is
+built on a permissively-licensed open-weight audio-LLM foundation, then adapted in-house through
+**300,000+ hours** of labeled audio (primarily Arabic, plus English) and a four-stage curriculum that
+ends in **KTO preference alignment** from native Arabic annotators — the contribution is the adaptation,
+not the foundation. It transcribes MSA and every major
 Arabic dialect (Gulf/Emirati, Egyptian, Levantine, Maghrebi), code-switched Arabic–English, and English —
 **30 languages** in total.
 
@@ -44,7 +46,7 @@ pointers, benchmarks, and copy-paste inference for both tiers.
 |---|---|---|
 | **Tier** | Real-time · edge | Accuracy |
 | **Parameters** | 0.78 B (0.60 B decoder + 0.19 B encoder) | 2.35 B (2.03 B decoder + 0.32 B encoder) |
-| **Runtimes** | 🤗 Transformers · GGUF (llama.cpp) | GGUF (llama.cpp) |
+| **Runtimes** | 🤗 Transformers · GGUF (llama.cpp) | GGUF (llama.cpp) · vLLM |
 | **Leaderboard** | #11 of 36 · 33.31 % avg WER | **#1 of 36 · 24.78 % avg WER** |
 | **Best for** | Live captioning, voice agents, on-device / offline | Lowest error on hard dialectal & long-form audio |
 | **License** | [AudarAI Open v1.0](https://www.audarai.com/license/audarai-open-license-v1.0/) | [AudarAI Community v1.0](https://www.audarai.com/license/audarai-community-license-v1.0/) |
@@ -90,6 +92,27 @@ print(transcribe(model, proc, "clip.wav"))               # <= 30 s clip
 
 > ⚠️ The audio projector (`mmproj`) must stay **BF16** — its `ClippableLinear` is numerically sensitive.
 > The decoder GGUF quantizes normally (Q4_K_M / Q8_0 / BF16 all published on Hugging Face).
+
+### vLLM — Turbo (GPU serving, OpenAI-compatible)
+
+Turbo also serves on **[vLLM](https://github.com/vllm-project/vllm)**, which implements the Qwen3-ASR
+architecture natively — no custom serving code. The vLLM weights are the 4-bit **W4A16**
+`compressed-tensors` build in the model repo's
+**[`vllm-w4a16/`](https://huggingface.co/audarai/Audar-ASR-V1-Turbo/tree/main/vllm-w4a16)** folder
+(~2.6 GB; near-BF16 accuracy, ≈ +1 pp CER).
+
+```bash
+./examples/vllm_serve.sh          # builds an audio-enabled vLLM image + serves on :8000
+```
+
+The stock vLLM image omits audio codecs, so the helper adds them (`av librosa soundfile`). Once the server
+is up, transcribe over the OpenAI API — either `POST /v1/audio/transcriptions` (multipart) or
+`/v1/chat/completions` with an `input_audio` part and the Arabic system prompt:
+
+```bash
+curl -s http://localhost:8000/v1/audio/transcriptions \
+  -F model=audar-asr-v1-turbo -F file=@clip.wav -F temperature=0
+```
 
 ### Long-form & realtime streaming
 
