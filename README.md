@@ -46,7 +46,7 @@ pointers, benchmarks, and copy-paste inference for both tiers.
 |---|---|---|
 | **Tier** | Real-time · edge | Accuracy |
 | **Parameters** | 0.78 B (0.60 B decoder + 0.19 B encoder) | 2.35 B (2.03 B decoder + 0.32 B encoder) |
-| **Runtimes** | 🤗 Transformers · GGUF (llama.cpp) | GGUF (llama.cpp) · vLLM |
+| **Runtimes** | 🤗 Transformers · GGUF (llama.cpp) · vLLM | GGUF (llama.cpp) · vLLM |
 | **Leaderboard** | #11 of 36 · 33.31 % avg WER | **#1 of 36 · 24.78 % avg WER** |
 | **Best for** | Live captioning, voice agents, on-device / offline | Lowest error on hard dialectal & long-form audio |
 | **License** | [AudarAI Open v1.0](https://www.audarai.com/license/audarai-open-license-v1.0/) | [AudarAI Community v1.0](https://www.audarai.com/license/audarai-community-license-v1.0/) |
@@ -93,16 +93,20 @@ print(transcribe(model, proc, "clip.wav"))               # <= 30 s clip
 > ⚠️ The audio projector (`mmproj`) must stay **BF16** — its `ClippableLinear` is numerically sensitive.
 > The decoder GGUF quantizes normally (Q4_K_M / Q8_0 / BF16 all published on Hugging Face).
 
-### vLLM — Turbo (GPU serving, OpenAI-compatible)
+### vLLM (GPU serving, OpenAI-compatible)
 
-Turbo also serves on **[vLLM](https://github.com/vllm-project/vllm)**, which implements the Qwen3-ASR
-architecture natively — no custom serving code. The vLLM weights are the 4-bit **W4A16**
-`compressed-tensors` build in the model repo's
-**[`vllm-w4a16/`](https://huggingface.co/audarai/Audar-ASR-V1-Turbo/tree/main/vllm-w4a16)** folder
-(~2.6 GB; near-BF16 accuracy, ≈ +1 pp CER).
+Both tiers serve on **[vLLM](https://github.com/vllm-project/vllm)**, which implements the Qwen3-ASR
+architecture natively — no custom serving code.
+
+- **Turbo** serves a 4-bit **W4A16** `compressed-tensors` build in the model repo's
+  **[`vllm-w4a16/`](https://huggingface.co/audarai/Audar-ASR-V1-Turbo/tree/main/vllm-w4a16)** folder
+  (~2.6 GB; near-BF16 accuracy, ≈ +1 pp CER).
+- **Flash** serves directly from its **bf16 `model.safetensors`** — no quant step (~1.6 GB, lossless,
+  FLEURS AR/EN CER ≈ 3.3 %). Flash prefixes raw output with a `language <Lang><asr_text>` tag —
+  strip it client-side (`re.sub(r"^\s*language\s+[A-Za-z]+\s*(?:<asr_text>)?\s*", "", text)`).
 
 ```bash
-./examples/vllm_serve.sh          # builds an audio-enabled vLLM image + serves on :8000
+./examples/vllm_serve.sh turbo    # or: flash — builds an audio-enabled vLLM image + serves on :8000
 ```
 
 The stock vLLM image omits audio codecs, so the helper adds them (`av librosa soundfile`). Once the server
