@@ -35,7 +35,7 @@ not the foundation. It transcribes MSA and every major
 Arabic dialect (Gulf/Emirati, Egyptian, Levantine, Maghrebi), code-switched Arabic–English, and English —
 **30 languages** in total.
 
-On the **Open Universal Arabic ASR Leaderboard**, the Turbo tier posts the **lowest average WER and CER of
+On the **Open Universal Arabic ASR Leaderboard** (https://huggingface.co/spaces/elmresearchcenter/open_universal_arabic_asr_leaderboard), the Turbo tier posts the **lowest average WER and CER of
 any evaluated system (rank #1 of 36)**, and the 0.78 B Flash tier is the **strongest small model on the
 board (#11)** — beating models several times its size. This repository is the developer hub: model
 pointers, benchmarks, and copy-paste inference for both tiers.
